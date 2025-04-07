@@ -2,26 +2,29 @@ const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
-// Direktori sumber dan output
 const inputDir = path.join(__dirname, 'images');
 const outputDir = path.join(__dirname, 'resized');
 
-// Buat folder output jika belum ada
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
 }
 
-// Ambil semua file di dalam folder input
-fs.readdir(inputDir, (err, files) => {
-    if (err) {
-        return console.error('Error membaca direktori:', err);
+
+const handleDir = dir => {
+    const dirPath = path.join(inputDir, dir);
+    const outDirPath = path.join(outputDir, dir);
+    if (!fs.lstatSync(dirPath).isDirectory()) return;
+
+    if (!fs.existsSync(outDirPath)) {
+        fs.mkdirSync(outDirPath);
     }
 
-    files.forEach((file) => {
-        const inputPath = path.join(inputDir, file);
-        const outputPath = path.join(outputDir, file);
+    const files = fs.readdirSync(dirPath);
 
-        // Periksa apakah file adalah gambar
+    files.forEach(file => {
+        const inputPath = path.join(dirPath, file);
+        const outputPath = path.join(outDirPath, file);
+
         if (/\.(jpe?g|png|webp)$/i.test(file)) {
             sharp(inputPath)
                 .resize(640, 640)
@@ -33,6 +36,13 @@ fs.readdir(inputDir, (err, files) => {
                     console.error(`Gagal resize ${file}:`, err);
                 });
         }
-    });
+    })
+}
+fs.readdir(inputDir, (err, subdir) => {
+    if (err) {
+        return console.error('Error membaca direktori:', err);
+    }
+
+    subdir.forEach(handleDir);
 });
 
