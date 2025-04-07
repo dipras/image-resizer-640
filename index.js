@@ -27,7 +27,9 @@ const handleDir = dir => {
 
         if (/\.(jpe?g|png|webp)$/i.test(file)) {
             sharp(inputPath)
-                .resize(640, 640)
+                .resize(640, 640, {
+                    fit: 'fill',
+                })
                 .toFile(outputPath)
                 .then(() => {
                     console.log(`Berhasil resize: ${file}`);
