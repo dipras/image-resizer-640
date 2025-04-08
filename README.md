@@ -56,3 +56,6 @@ Berhasil resize: mountain.png
 Berhasil resize: cat.webp
 Berhasil resize: dog.jpeg
 ```
+
+## License
+This project is under [GPLv2 License](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
